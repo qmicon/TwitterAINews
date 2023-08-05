@@ -1,0 +1,10 @@
+{
+    "maxTweetsPerDay": 48,
+    "sleepForMs": 900000,
+    "redisDailyTaskTrackerKey": "twitterAI-date-to-state|task-start-time",
+    "redisTweetSentStatusKey": "twitterAI-date|tweet-index-to-sent-status|scheduled-time",
+    "redisIndexedNewsKey": "twitterAI-date|tweet-index-to-news-data",
+    "redisTwitterAPIRefreshToken": "twitterAI-refresh-token",
+    "newsSearchTexts": ["Artificial Intelligence", "Crypto"],
+    "newsApiUrl": "https://api.worldnewsapi.com/search-news"
+}
