@@ -117,11 +117,13 @@ async function tweetIfScheduled(date_str, tweet_index, task_create_time, nowDate
     await refreshedClient.v2.tweet({
         text: tweet,
       })
+      console.log("tweeted:\n", tweet)
     }
     catch(error) {
         console.log(error)
-        console.log("making tweet shorter")
+        console.log("making this tweet shorter:\n", tweet)
         var newprompt = "Can you make this tweet strictly shorter than 280 characters as that is the limit of a tweet:\n" + tweet
+        newprompt+= "\nKeep the prefix [AI]"
         const aicompletion = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: [{role: "user", content: newprompt}],
@@ -134,9 +136,8 @@ async function tweetIfScheduled(date_str, tweet_index, task_create_time, nowDate
         await refreshedClient.v2.tweet({
             text: shorterTweet,
           })
-
+        console.log("tweeted:\n", shorterTweet)
     }
-    console.log("tweeted:\n", tweet)
     await redisClient.hSet(config.redisTweetSentStatusKey, `${date_str}|${tweet_index}`, "DONE|"+ tweetStatusData[1])
     if(await redisClient.hExists(config.redisIndexedNewsKey, `${date_str}|${parseInt(tweet_index) + 1}`))
     await redisClient.hSet(config.redisDailyTaskTrackerKey, date_str, `${parseInt(tweet_index) + 1}|${task_create_time}`)
