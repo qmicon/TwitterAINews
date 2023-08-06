@@ -73,9 +73,9 @@ async function newDayReadNewsScheduleTweets(date_str, last_task_time, nowDateTim
     var tweetingTimeIntervalMs = Math.floor(24 * 60 * 60 * 1000/totalNewsArticles)
     for (let i = 0; i < totalNewsArticles; i++) {
         var scheduled_dt = new Date(nowDateTime.getTime() + tweetingTimeIntervalMs*i)
-        var scheduled_time = scheduled_dt.toISOString().split('T')[1]
+        var scheduled_date_time = scheduled_dt.toISOString()
         console.log("Setting Schedule time for index", i)
-        await redisClient.hSet(config.redisTweetSentStatusKey, `${date_str}|${i}`, "PENDING|" + scheduled_time)
+        await redisClient.hSet(config.redisTweetSentStatusKey, `${date_str}|${i}`, "PENDING|" + scheduled_date_time)
     }
 
     await redisClient.hSet(config.redisDailyTaskTrackerKey, date_str, "0|" + nowDateTime.toISOString().split('T')[1])
@@ -90,7 +90,7 @@ async function tweetIfScheduled(date_str, tweet_index, task_create_time, nowDate
     var tweetStatusData = scheduleStatus.split('|')
     if(tweetStatusData[0] !== "PENDING")
     return
-    var tweet_scheduled_dt = new Date(date_str + "T" + tweetStatusData[1])
+    var tweet_scheduled_dt = new Date(tweetStatusData[1])
     if(tweet_scheduled_dt >= nowDateTime)
     return
     console.log("Tweeting schedule time: ",  tweetStatusData[1])
