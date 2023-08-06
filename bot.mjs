@@ -170,7 +170,7 @@ async function task() {
         var data = status.split('|')
         if(data[0] === "DONE") {
             task_date = nowDate
-            tast_status = "CREATE"
+            task_status = "CREATE"
             task_time = data[1]
         }
         else {
