@@ -105,6 +105,7 @@ async function tweetIfScheduled(date_str, tweet_index, task_create_time, nowDate
     console.log(aicompletion.data.usage)
     var tweet = aicompletion.data.choices[0].message.content
     tweet = "[AI] " + tweet.replace(/^\"+|\"+$/g, '');
+    tweet = tweet.replace(/\(\d+ characters\)/, '');
     try{
     await refreshedClient.v2.tweet({
         text: tweet,
@@ -122,6 +123,7 @@ async function tweetIfScheduled(date_str, tweet_index, task_create_time, nowDate
         console.log(aicompletion.data.usage)
         var shorterTweet = aicompletion.data.choices[0].message.content
         shorterTweet = shorterTweet.replace(/^\"+|\"+$/g, '');
+        shorterTweet = shorterTweet.replace(/\(\d+ characters\)/, '');
         await refreshedClient.v2.tweet({
             text: shorterTweet,
           })
@@ -129,7 +131,10 @@ async function tweetIfScheduled(date_str, tweet_index, task_create_time, nowDate
     }
     console.log("tweeted:\n", tweet)
     await redisClient.hSet(config.redisTweetSentStatusKey, `${date_str}|${tweet_index}`, "DONE|"+ tweetStatusData[1])
+    if(await redisClient.hExists(config.redisIndexedNewsKey, `${date_str}|${parseInt(tweet_index) + 1}`))
     await redisClient.hSet(config.redisDailyTaskTrackerKey, date_str, `${parseInt(tweet_index) + 1}|${task_create_time}`)
+    else
+    await redisClient.hSet(config.redisDailyTaskTrackerKey, date_str, `DONE|${task_create_time}`)
     return
 }
 
