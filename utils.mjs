@@ -1,4 +1,7 @@
 import fetch from 'node-fetch';
+import { Tiktoken } from "tiktoken/lite";
+import cl100k_base from "tiktoken/encoders/cl100k_base.json"  assert { type: "json" };
+
 export function getDateTimeFormatted(now) {
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -30,3 +33,30 @@ export async function callGetApi(url, params) {
 export function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
+
+export function calculateTokens(prompt) {
+  var gpt_encoding = new Tiktoken(
+    cl100k_base.bpe_ranks,
+    cl100k_base.special_tokens,
+    cl100k_base.pat_str
+  );
+
+var inputTokens = gpt_encoding.encode(prompt);
+gpt_encoding.free();
+return inputTokens.length
+}
+
+export function trimString(text, tokenLimit) {
+  const sentenceBoundaryRegex = /[^\.!\?]+[\.!\?]+/g;
+  const sentences = text.match(sentenceBoundaryRegex);
+  
+    let trimmedStr = "";
+    for (let i = 0; i < sentences.length; i++) {
+      const sentence = sentences[i];
+      if(calculateTokens(trimmedStr+sentence) > tokenLimit) 
+      break;
+      else
+      trimmedStr+=sentence
+    }
+  return trimmedStr
+}

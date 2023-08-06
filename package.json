@@ -5,6 +5,7 @@
     "node-fetch": "^3.3.2",
     "openai": "^3.3.0",
     "redis": "^4.6.7",
+    "tiktoken": "^1.0.10",
     "twitter-api-v2": "^1.15.1"
   }
 }

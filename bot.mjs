@@ -3,7 +3,7 @@ import redis from 'redis';
 import dotenv from 'dotenv';
 import { Configuration, OpenAIApi } from 'openai';
 import { TwitterApi } from 'twitter-api-v2';
-import { getDateTimeFormatted, delay, callGetApi } from './utils.mjs';
+import { getDateTimeFormatted, delay, callGetApi, calculateTokens, trimString } from './utils.mjs';
 
 dotenv.config();
 
@@ -95,6 +95,13 @@ async function tweetIfScheduled(date_str, tweet_index, task_create_time, nowDate
     return
     console.log("Tweeting schedule time: ",  tweetStatusData[1])
     var newsData = await redisClient.hGet(config.redisIndexedNewsKey, `${date_str}|${tweet_index}`)
+    var newsTokens = calculateTokens(newsData)
+    if(newsTokens > config.newsDataTokenLimit) {
+        console.log("news article too big, trimming it")
+        var newsObj = JSON.parse(newsData)
+        newsObj.text = trimString(newsObj.text, config.newsDataTokenLimit)
+        newsData = JSON.stringify(newsObj)
+    }
     var promptbuild = "Can you tweet an extremely opinionated tweet, which incites exnihilating emotions on this content:\n" + newsData
     promptbuild = promptbuild + "\nPlease keep the response strictly under 270 characters as that is the limit of a tweet"
     const aicompletion = await openai.createChatCompletion({

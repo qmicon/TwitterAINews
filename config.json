@@ -6,5 +6,6 @@
     "redisIndexedNewsKey": "twitterAI-date|tweet-index-to-news-data",
     "redisTwitterAPIRefreshToken": "twitterAI-refresh-token",
     "newsSearchTexts": ["Artificial Intelligence", "Crypto"],
-    "newsApiUrl": "https://api.worldnewsapi.com/search-news"
+    "newsApiUrl": "https://api.worldnewsapi.com/search-news",
+    "newsDataTokenLimit": 3900
 }
