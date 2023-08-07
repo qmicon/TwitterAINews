@@ -41,7 +41,6 @@ async function newDayReadNewsScheduleTweets(date_str, last_task_time, nowDateTim
             "earliest-publish-date": news_data_from_time,
             "latest-publish-date": news_data_to_time,
             "language": "en",
-            "max-sentiment": "0.0",
             "number": Math.floor(config.maxTweetsPerDay/config.newsSearchTexts.length)
         }
         var apiRes = null
