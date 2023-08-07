@@ -133,10 +133,17 @@ async function tweetIfScheduled(date_str, tweet_index, task_create_time, nowDate
         var shorterTweet = aicompletion.data.choices[0].message.content
         shorterTweet = shorterTweet.replace(/^\"+|\"+$/g, '');
         shorterTweet = shorterTweet.replace(/\(\d+ characters\)/, '');
-        await refreshedClient.v2.tweet({
-            text: shorterTweet,
-          })
-        console.log("tweeted:\n", shorterTweet)
+        try {
+            await refreshedClient.v2.tweet({
+                text: shorterTweet,
+            })
+            console.log("tweeted:\n", shorterTweet)
+        }
+        catch(error) {
+            console.log(error)
+            console.log("cancelling the task, repeat it again next time")
+            return
+        }
     }
     await redisClient.hSet(config.redisTweetSentStatusKey, `${date_str}|${tweet_index}`, "DONE|"+ tweetStatusData[1])
     if(await redisClient.hExists(config.redisIndexedNewsKey, `${date_str}|${parseInt(tweet_index) + 1}`))
