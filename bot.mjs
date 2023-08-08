@@ -113,6 +113,8 @@ async function tweetIfScheduled(date_str, tweet_index, task_create_time, nowDate
     tweet = "[AI] " + tweet.replace(/^\"+|\"+$/g, '');
     tweet = tweet.replace(/\(\d+ characters\)/, '');
     try{
+    if(tweet.length > 280)
+    throw "Tweet too long"
     await refreshedClient.v2.tweet({
         text: tweet,
       })
@@ -133,6 +135,8 @@ async function tweetIfScheduled(date_str, tweet_index, task_create_time, nowDate
         shorterTweet = shorterTweet.replace(/^\"+|\"+$/g, '');
         shorterTweet = shorterTweet.replace(/\(\d+ characters\)/, '');
         try {
+            if(shorterTweet.length > 280)
+            throw "Tweet too long"
             await refreshedClient.v2.tweet({
                 text: shorterTweet,
             })
