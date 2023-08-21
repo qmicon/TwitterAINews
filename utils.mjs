@@ -47,8 +47,12 @@ return inputTokens.length
 }
 
 export function trimString(text, tokenLimit) {
+  text = filterNonEnglish(text)
+  console.log(text)
   const sentenceBoundaryRegex = /[^\.!\?]+[\.!\?]+/g;
-  const sentences = text.match(sentenceBoundaryRegex);
+  var sentences = text.match(sentenceBoundaryRegex);
+  if(!sentences)
+  sentences = [text]
   
     let trimmedStr = "";
     for (let i = 0; i < sentences.length; i++) {
@@ -59,4 +63,11 @@ export function trimString(text, tokenLimit) {
       trimmedStr+=sentence
     }
   return trimmedStr
+}
+
+export function filterNonEnglish(inputString) {
+  const nonEnglishPattern = /[^A-Za-z0-9\s.,!?'"()]+/g;
+  const filteredString = inputString.replace(nonEnglishPattern, '');
+
+  return filteredString;
 }
