@@ -7,5 +7,5 @@
     "redisTwitterAPIRefreshToken": "twitterAI-refresh-token",
     "newsSearchTexts": ["Artificial Intelligence", "Crypto"],
     "newsApiUrl": "https://api.worldnewsapi.com/search-news",
-    "newsDataTokenLimit": 3900
+    "newsDataTokenLimit": 3800
 }

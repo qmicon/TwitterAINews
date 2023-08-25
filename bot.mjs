@@ -101,8 +101,7 @@ async function tweetIfScheduled(date_str, tweet_index, task_create_time, nowDate
         newsObj.text = trimString(newsObj.text, config.newsDataTokenLimit)
         newsData = JSON.stringify(newsObj)
     }
-    var promptbuild = "Can you tweet an extremely opinionated tweet, which incites exnihilating emotions on this content:\n" + newsData
-    promptbuild = promptbuild + "\nPlease keep the response strictly under 270 characters as that is the limit of a tweet"
+    var promptbuild = "Please respond with an extremely opinionated and 600 characters long tweet, which incites exnihilating emotions on the following news content. Also include a Call to Action to follow my twitter profile to know how to create their own tweet generator. Also include a pun from the news content in the call to action.\nNews Content:\n" + newsData
     const aicompletion = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: [{role: "user", content: promptbuild}],
@@ -113,7 +112,7 @@ async function tweetIfScheduled(date_str, tweet_index, task_create_time, nowDate
     tweet = "[AI] " + tweet.replace(/^\"+|\"+$/g, '');
     tweet = tweet.replace(/\(\d+ characters\)/, '');
     try{
-    if(tweet.length > 280)
+    if(tweet.length > 4000)
     throw "Tweet too long"
     await refreshedClient.v2.tweet({
         text: tweet,
